@@ -19,3 +19,6 @@ __debug_bin
 *.log
 pact.log
 _logs/
+
+# OS generated files #
+.DS_Store.DS_Store
