@@ -13,13 +13,14 @@ func NewTodoService(repository todo.Repository) *TodoService {
 	return &TodoService{repository: repository}
 }
 
-func (t *TodoService) Create(req *CreateTodoRequest) error {
+func (t *TodoService) Create(req *CreateTodoRequest) (*todo.Todo, error) {
 	nTodo := todo.Todo{
 		ID:   uuid.New(),
 		Todo: req.Todo,
 	}
 
-	return todo.Create(t.repository, &nTodo)
+	err := todo.Create(t.repository, &nTodo)
+	return &nTodo, err
 }
 
 func (t *TodoService) GetList() (*[]todo.Todo, error) {

@@ -26,13 +26,13 @@ func (t *TodoController) CreateTodo(g *gin.Context) {
 		g.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	err := t.service.Create(req)
+	todo, err := t.service.Create(req)
 	if err != nil {
 		g.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	g.JSON(http.StatusCreated, gin.H{"message": "Todo created"})
+	g.JSON(http.StatusCreated, todo)
 }
 
 func (t *TodoController) GetList(g *gin.Context) {
