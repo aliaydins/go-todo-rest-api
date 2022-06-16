@@ -15,25 +15,21 @@ func NewUserRepository(db *gorm.DB) *userRepository {
 	}
 }
 
-func (ur *userRepository) Migration() error {
-	err := ur.db.Migrator().DropTable(&user.User{})
-	if err != nil {
-		return err
-	}
-	err = ur.db.AutoMigrate(&user.User{})
+func (r *userRepository) Migration() error {
+	err := r.db.AutoMigrate(&user.User{})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (ur *userRepository) Create(user *user.User) error {
-	return ur.db.Create(user).Error
+func (r *userRepository) Create(user *user.User) error {
+	return r.db.Create(user).Error
 }
 
-func (ur *userRepository) FindByUserName(email string) (*user.User, error) {
+func (r *userRepository) FindByUserName(email string) (*user.User, error) {
 	user := new(user.User)
-	err := ur.db.Where("email = ?", email).First(&user).Error
+	err := r.db.Where("email = ?", email).First(&user).Error
 	if err != nil {
 		return nil, err
 	}

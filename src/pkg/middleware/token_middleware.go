@@ -10,8 +10,9 @@ import (
 
 func AuthMiddleware(secretKey string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.GetHeader("token") != "" {
-			decodedClaims := jwt_helper.VerifyToken(c.GetHeader("token"), secretKey, os.Getenv("ENV"))
+
+		if c.GetHeader("access_token") != "" {
+			decodedClaims := jwt_helper.VerifyToken(c.GetHeader("access_token"), secretKey, os.Getenv("ENV"))
 			if decodedClaims != nil {
 				if decodedClaims.Exp < jwt_helper.GetCurrentTime() {
 					c.JSON(http.StatusUnauthorized, gin.H{"error": "Token is expired"})
@@ -20,10 +21,6 @@ func AuthMiddleware(secretKey string) gin.HandlerFunc {
 				}
 
 			}
-
-			c.JSON(http.StatusForbidden, gin.H{"error": "You are not allowed to use this endpoint!"})
-			c.Abort()
-			return
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "You are not authorized!"})
 			c.Abort()

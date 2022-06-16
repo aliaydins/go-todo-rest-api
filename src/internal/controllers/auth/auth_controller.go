@@ -25,11 +25,11 @@ func (c *AuthController) Health(g *gin.Context) {
 }
 
 func (c *AuthController) Login(g *gin.Context) {
-	request := new(auth_service.LoginRequest)
-	if err := g.BindJSON(request); err != nil {
+	req := new(auth_service.LoginRequest)
+	if err := g.BindJSON(req); err != nil {
 		g.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	accessToken, err := c.service.Authenticate(request, c.secretKey)
+	accessToken, err := c.service.Authenticate(req, c.secretKey)
 	if err != nil {
 		g.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -38,12 +38,12 @@ func (c *AuthController) Login(g *gin.Context) {
 }
 
 func (c *AuthController) Signup(g *gin.Context) {
-	request := new(auth_service.SignupRequest)
-	if err := g.BindJSON(request); err != nil {
+	req := new(auth_service.SignupRequest)
+	if err := g.BindJSON(req); err != nil {
 		g.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	err := c.service.Signup(request)
+	err := c.service.Signup(req)
 	if err != nil {
 		g.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

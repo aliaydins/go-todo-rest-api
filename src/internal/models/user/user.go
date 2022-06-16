@@ -24,8 +24,8 @@ func ValidateUser(r Repository, email string, password string, secretKey string)
 		"firstname": user.FirstName,
 		"lastname":  user.LastName,
 		"iat":       time.Now().Unix(),
-		"exp": time.Now().Add(24 *
-			time.Second).Unix(),
+		"exp": time.Now().Add(1 *
+			time.Hour).Unix(),
 	})
 
 	accessToken := jwt_helper.GenerateToken(jwtClaims, secretKey)
@@ -33,6 +33,12 @@ func ValidateUser(r Repository, email string, password string, secretKey string)
 }
 
 func Signup(r Repository, email, password, firstname, lastname string) error {
+
+	u, _ := r.FindByUserName(email)
+	if u != nil {
+		return ErrUserExist
+	}
+
 	salt := hash.GenerateSalt()
 	user := &User{
 		ID:        uuid.New(),
@@ -42,6 +48,7 @@ func Signup(r Repository, email, password, firstname, lastname string) error {
 		Salt:      salt,
 		Password:  hash.GenerateHash(password, salt),
 	}
+
 	if err := r.Create(user); err != nil {
 		return err
 	}
